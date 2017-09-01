@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>qt_visualization</name>
+  <version>0.0.1</version>
+  <description>
+    Various qt visualizations for playing around
+  </description>
+  <maintainer email="Reimann.Alex.8.8@gmail.com">Alexander Reimann</maintainer>
+  <license>BSD</license>
+  <url type="website">https://github.com/AlexReimann/qt_visualization</url>
+  <url type="repository">https://github.com/AlexReimann/qt_visualization</url>
+  <author email="Reimann.Alex.8.8@gmail.com">Alexander Reimann</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>plane_calibration</depend>
+  <depend>qglv_extras</depend>
+  <depend>qglv_opengl</depend>
+
+  <export>
+<!--     <rosdoc config="doc/rosdoc.yaml" /> -->
+  </export>
+</package>
