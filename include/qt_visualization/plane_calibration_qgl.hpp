@@ -1,6 +1,8 @@
 #ifndef qt_visualization_PLANE_CALIBRATION_QGL_HPP_
 #define qt_visualization_PLANE_CALIBRATION_QGL_HPP_
 
+#include "gl_list_drawer.hpp"
+
 #include <QWidget>
 
 // rendering headers
@@ -19,10 +21,11 @@ public:
   {
   }
 
+  void setLineDrawer(GLListDrawerPtr line_drawer);
   virtual void draw();
 
 protected:
-  qglv::DirectedEdgesPtr edges_;
+  GLListDrawerPtr line_drawer_;
 };
 
 } // namespace

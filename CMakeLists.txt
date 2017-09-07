@@ -13,11 +13,14 @@ find_package(catkin REQUIRED
                 plane_calibration
                 qglv_extras
                 qglv_opengl
+                cmake_modules
 )
 
 set(QT_INCLUDE_DIRS_NO_SYSTEM TRUE)
 find_package(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 include(${QT_USE_FILE})
+
+find_package(Eigen REQUIRED)
 
 ##############################################################################
 # Catkin
@@ -39,6 +42,7 @@ catkin_package(
         qglv_opengl
     DEPENDS
         QT
+        Eigen
 )
 
 ##############################################################################
@@ -52,7 +56,9 @@ include_directories(
         ${catkin_INCLUDE_DIRS}
         ${QT_INCLUDES}    # list of escaped QtCore, ... subdirs.
         ${QT_INCLUDE_DIR} # the root level qt4 dir
+        ${EIGEN_INCLUDE_DIRS}
 )
+add_definitions(${EIGEN_DEFINITIONS})
 
 ##############################################################################
 # Subdirectories includes
