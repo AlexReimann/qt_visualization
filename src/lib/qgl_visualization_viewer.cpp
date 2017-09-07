@@ -1,25 +1,24 @@
-#include "qt_visualization/plane_calibration_qgl.hpp"
+#include "../../include/qt_visualization/qgl_visualization_viewer.hpp"
 
 #include <GL/glew.h>
 #include <GL/glu.h>
-
 #include <Eigen/Dense>
 #include <unsupported/Eigen/OpenGLSupport>
 
 namespace qt_visualization
 {
 
-PlaneCalibrationQGL::PlaneCalibrationQGL(QWidget* parent) :
+QGLVisualizationViewer::QGLVisualizationViewer(QWidget* parent) :
     qglv::QGLViewer(parent)
 {
 }
 
-void PlaneCalibrationQGL::setLineDrawer(GLListDrawerPtr line_drawer)
+void QGLVisualizationViewer::setLineDrawer(GLListDrawerPtr line_drawer)
 {
   line_drawer_ = line_drawer;
 }
 
-void PlaneCalibrationQGL::draw()
+void QGLVisualizationViewer::draw()
 {
   if (line_drawer_)
   {

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   GLListDrawerPtr line_drawer = std::make_shared<GLListDrawer>();
 
   PlaneCalibrationUI main_window;
-  main_window.widget->setLineDrawer(line_drawer);
+  main_window.qgl_viewer->setLineDrawer(line_drawer);
 
   Eigen::Vector3f test1(1, 2, 3);
   Eigen::Vector3f test2(4, 5, 6);

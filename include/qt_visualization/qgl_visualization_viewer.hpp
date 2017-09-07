@@ -1,5 +1,5 @@
-#ifndef qt_visualization_PLANE_CALIBRATION_QGL_HPP_
-#define qt_visualization_PLANE_CALIBRATION_QGL_HPP_
+#ifndef qt_visualization_QGL_VISUALIZATION_VIEWER_HPP_
+#define qt_visualization_QGL_VISUALIZATION_VIEWER_HPP_
 
 #include "gl_list_drawer.hpp"
 
@@ -12,12 +12,12 @@
 namespace qt_visualization
 {
 
-class PlaneCalibrationQGL : public qglv::QGLViewer
+class QGLVisualizationViewer : public qglv::QGLViewer
 {
   Q_OBJECT
 public:
-  PlaneCalibrationQGL(QWidget* parent);
-  virtual ~PlaneCalibrationQGL()
+  QGLVisualizationViewer(QWidget* parent);
+  virtual ~QGLVisualizationViewer()
   {
   }
 

@@ -81,7 +81,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="qt_visualization::PlaneCalibrationQGL" name="widget" native="true">
+       <widget class="qt_visualization::QGLVisualizationViewer" name="qgl_viewer" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -113,9 +113,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>qt_visualization::PlaneCalibrationQGL</class>
+   <class>qt_visualization::QGLVisualizationViewer</class>
    <extends>QWidget</extends>
-   <header>qt_visualization/plane_calibration_qgl.hpp</header>
+   <header>qt_visualization/qgl_visualization_viewer.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

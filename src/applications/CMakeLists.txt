@@ -3,7 +3,7 @@
 ##############################################################################
 
 qt4_wrap_cpp(QT_CUSTOM_WRAP
-    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/plane_calibration_qgl.hpp
+    ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/qgl_visualization_viewer.hpp
     ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/plane_calibration_ui.hpp
 )
 
@@ -24,7 +24,6 @@ add_executable(plane_calibration_view
     ${UI_INTERFACE_SOURCES}
     plane_calibration_view.cpp
     plane_calibration_ui.cpp
-    plane_calibration_qgl.cpp
 )
 
 target_link_libraries(plane_calibration_view
