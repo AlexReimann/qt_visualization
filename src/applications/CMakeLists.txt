@@ -24,6 +24,7 @@ add_executable(plane_calibration_view
     ${UI_INTERFACE_SOURCES}
     plane_calibration_view.cpp
     plane_calibration_ui.cpp
+    hough_planes.cpp
 )
 
 target_link_libraries(plane_calibration_view

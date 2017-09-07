@@ -1,4 +1,6 @@
 #include "qt_visualization/plane_calibration_ui.hpp"
+#include "qt_visualization/gl_list_drawer.hpp"
+#include "qt_visualization/hough_planes.hpp"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -16,13 +18,12 @@ int main(int argc, char *argv[])
 
   GLListDrawerPtr line_drawer = std::make_shared<GLListDrawer>();
 
+  HoughPlanes planes(line_drawer);
+  planes.setup();
+  planes.run();
+
   PlaneCalibrationUI main_window;
   main_window.qgl_viewer->setLineDrawer(line_drawer);
-
-  Eigen::Vector3f test1(1, 2, 3);
-  Eigen::Vector3f test2(4, 5, 6);
-
-  line_drawer->addLine(test1, test2);
 
   main_window.show();
 

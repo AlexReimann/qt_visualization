@@ -32,6 +32,11 @@ public:
       deleteOldList();
     }
 
+    void setColor(const Eigen::Vector3f& color)
+    {
+      color_ = color;
+    }
+
     void draw()
     {
       if (updated_)
@@ -78,6 +83,11 @@ public:
       line_width_ = line_width;
     }
 
+    void setLineWidth(const float& line_width)
+    {
+      line_width_ = line_width;
+    }
+
     void add(const float& point1_x, const float& point1_y, const float& point1_z, const float& point2_x,
              const float& point2_y, const float& point2_z)
     {
@@ -94,8 +104,8 @@ public:
   protected:
     virtual void update() override
     {
-      glColor3f(0.1f, 0.2f, 0.1f);
-      glLineWidth(1.0f);
+      glColor3f(color_.x(), color_.y(), color_.z());
+      glLineWidth(line_width_);
       glEnableClientState(GL_VERTEX_ARRAY);
       glVertexPointer(3, GL_FLOAT, 0, line_coordinates_.data());
       glDrawArrays(GL_LINES, 0, line_coordinates_.size() / 3);
@@ -111,7 +121,11 @@ public:
   {
   }
 
+  virtual void setLines(const Eigen::Vector3f& color = Eigen::Vector3f(0.0f, 0.0f, 0.0f), const std::string& id = "");
+  virtual void setLineWidth(const float& line_width = 1.0f, const std::string& id = "");
+
   virtual void addLine(const Eigen::Vector3f& point1, const Eigen::Vector3f& point2, const std::string& id = "");
+  virtual void addLine(const Eigen::Matrix<float, 6, 1>& line, const std::string& id = "");
   virtual void addLine(const float& point1_x, const float& point1_y, const float& point1_z, const float& point2_x,
                        const float& point2_y, const float& point2_z, const std::string& id = "");
 
