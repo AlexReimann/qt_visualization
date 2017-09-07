@@ -13,16 +13,18 @@ namespace qt_visualization
 class PlaneCalibrationQGL : public qglv::QGLViewer
 {
   Q_OBJECT
-public :
-  PlaneCalibrationQGL(QWidget *parent);
-  virtual ~PlaneCalibrationQGL() {};
+public:
+  PlaneCalibrationQGL(QWidget* parent);
+  virtual ~PlaneCalibrationQGL()
+  {
+  }
 
   virtual void draw();
 
-  qglv::TeleportArrow origin_teleport_arrow;
-  qglv::TeleportArrow destination_teleport_arrow;
+protected:
+  qglv::DirectedEdgesPtr edges_;
 };
 
-}  // namespace
+} // namespace
 
 #endif

@@ -3,7 +3,7 @@
 namespace qt_visualization
 {
 
-PlaneCalibrationQGL::PlaneCalibrationQGL(QWidget *parent) :
+PlaneCalibrationQGL::PlaneCalibrationQGL(QWidget* parent) :
     qglv::QGLViewer(parent)
 {
 }
@@ -11,6 +11,9 @@ PlaneCalibrationQGL::PlaneCalibrationQGL(QWidget *parent) :
 void PlaneCalibrationQGL::draw()
 {
   qglv::QGLViewer::draw();
+
+
+//  edges_->draw();
 }
 
 } // namespace
