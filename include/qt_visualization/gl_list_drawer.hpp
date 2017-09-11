@@ -116,6 +116,48 @@ public:
     std::vector<float> line_coordinates_;
   };
 
+  class Points : public GLGenList
+  {
+  public:
+    Points(const Eigen::Vector3f& color = Eigen::Vector3f(0.0f, 0.0f, 0.0f), const float& size = 1.0f) :
+        GLGenList(color)
+    {
+      size_ = size;
+    }
+
+    Points(const float& size)
+    {
+      size_ = size;
+    }
+
+    void setSize(const float& size)
+    {
+      size_ = size;
+    }
+
+    void add(const float& x, const float& y, const float& z)
+    {
+      point_coordinates_.push_back(x);
+      point_coordinates_.push_back(y);
+      point_coordinates_.push_back(z);
+      updated_ = true;
+    }
+
+  protected:
+    virtual void update() override
+    {
+      glColor3f(color_.x(), color_.y(), color_.z());
+      glPointSize(size_);
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glVertexPointer(3, GL_FLOAT, 0, point_coordinates_.data());
+      glDrawArrays(GL_POINTS, 0, point_coordinates_.size() / 3);
+      glDisableClientState(GL_VERTEX_ARRAY);
+    }
+
+    float size_;
+    std::vector<float> point_coordinates_;
+  };
+
   GLListDrawer();
   virtual ~GLListDrawer()
   {
@@ -132,6 +174,14 @@ public:
   virtual void clearLines(const std::string& id = "");
   virtual void clearAllLines();
 
+  virtual void setPoints(const Eigen::Vector3f& color = Eigen::Vector3f(0.0f, 0.0f, 0.0f), const std::string& id = "");
+  virtual void setPointSize(const float& size = 1.0f, const std::string& id = "");
+
+  virtual void addPoint(const Eigen::Vector3f& point, const std::string& id = "");
+  virtual void addPoint(const float& x, const float& y, const float& z, const std::string& id = "");
+
+  virtual void clearAll();
+
   virtual void draw();
 
 protected:
@@ -140,6 +190,7 @@ protected:
 
   std::mutex mutex_;
   std::map<std::string, Lines> lines_;
+  std::map<std::string, Points> points_;
 };
 typedef std::shared_ptr<GLListDrawer> GLListDrawerPtr;
 

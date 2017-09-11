@@ -1,5 +1,7 @@
 #include "qt_visualization/gl_list_drawer.hpp"
 
+#include <iostream>
+
 namespace qt_visualization
 {
 GLListDrawer::GLListDrawer()
@@ -8,11 +10,13 @@ GLListDrawer::GLListDrawer()
 
 void GLListDrawer::setLines(const Eigen::Vector3f& color, const std::string& id)
 {
+  std::lock_guard<std::mutex> lock(mutex_);
   lines_[id].setColor(color);
 }
 
 void GLListDrawer::setLineWidth(const float& line_width, const std::string& id)
 {
+  std::lock_guard<std::mutex> lock(mutex_);
   lines_[id].setLineWidth(line_width);
 }
 
@@ -51,12 +55,47 @@ void GLListDrawer::clearAllLines()
   lines_.clear();
 }
 
+void GLListDrawer::setPoints(const Eigen::Vector3f& color, const std::string& id)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  points_[id].setColor(color);
+}
+
+void GLListDrawer::setPointSize(const float& size, const std::string& id)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  points_[id].setSize(size);
+}
+
+void GLListDrawer::addPoint(const Eigen::Vector3f& point, const std::string& id)
+{
+  addPoint(point.x(), point.y(), point.z(), id);
+}
+
+void GLListDrawer::addPoint(const float& x, const float& y, const float& z, const std::string& id)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  points_[id].add(x, y, z);
+}
+
+void GLListDrawer::clearAll()
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  lines_.clear();
+  points_.clear();
+}
+
 void GLListDrawer::draw()
 {
   std::lock_guard<std::mutex> lock(mutex_);
   for (auto lines : lines_)
   {
     lines.second.draw();
+  }
+
+  for (auto points : points_)
+  {
+    points.second.draw();
   }
 }
 

@@ -6,6 +6,7 @@
 #include <Eigen/Dense>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace qt_visualization
 {
@@ -14,8 +15,13 @@ class HoughPlanes
 {
 public:
   HoughPlanes(GLListDrawerPtr list_drawer);
+  virtual ~HoughPlanes()
+  {
+  }
 
-  void setup();
+  void updatePx(const int& slider_value);
+  void updatePy(const int& slider_value);
+  void setup(double px = 0.0, double py = 0.0);
   void run();
   Eigen::MatrixXd getVotes();
 
@@ -33,11 +39,16 @@ protected:
 
   std::string name_all_;
   std::string name_selected_;
+  std::string name_points_;
   GLListDrawerPtr list_drawer_;
+
+  double px_;
+  double py_;
 
   Eigen::MatrixXd votes_;
 };
+typedef std::shared_ptr<HoughPlanes> HoughPlanesPtr;
 
-}  // namespace
+} // namespace
 
 #endif

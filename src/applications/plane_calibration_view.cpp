@@ -23,30 +23,19 @@ int main(int argc, char *argv[])
 
   std::shared_ptr<QPixmap> pixmap;
 
-  HoughPlanes planes(line_drawer);
-  planes.setup();
-  planes.run();
-
-  Eigen::MatrixXd votes = planes.getVotes();
-
-  std::cout << votes << std::endl;
+  HoughPlanesPtr planes = std::make_shared<HoughPlanes>(line_drawer);
+  planes->setup();
+  planes->run();
 
   PlaneCalibrationUI main_window;
   main_window.qgl_viewer->setLineDrawer(line_drawer);
+  main_window.qgl_viewer->setHoughPlanes(planes);
+  main_window.qgl_viewer->setHoughImage(main_window.imageLabel);
 
-  QImage hough_image(votes.cols(), votes.rows(), QImage::Format_RGB32);
-
-  for (int y = 0; y < votes.rows(); ++y)
-  {
-    for (int x = 0; x < votes.cols(); ++x)
-    {
-      int value = (votes(y, x) * 255);
-      hough_image.setPixel(x, y, qRgb(value, value, value));
-    }
-  }
-
-  QImage scaled_image = hough_image.scaled(300, 100);
-  main_window.imageLabel->setPixmap(QPixmap::fromImage(scaled_image));
+  QObject::connect(main_window.pxSlider, SIGNAL(valueChanged(int)),
+                   main_window.qgl_viewer, SLOT(updatePx(const int&)));
+  QObject::connect(main_window.pySlider, SIGNAL(valueChanged(int)),
+                   main_window.qgl_viewer, SLOT(updatePy(const int&)));
 
   main_window.show();
 
