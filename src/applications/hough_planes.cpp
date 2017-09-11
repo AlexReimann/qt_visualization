@@ -7,8 +7,10 @@ namespace qt_visualization
 
 HoughPlanes::HoughPlanes(GLListDrawerPtr list_drawer)
 {
-  step_size_ = 0.1;
+  step_size_ = 0.01;
   max_angle_ = 0.174533;
+  angle_bin_size_ = 0.00872665;
+
   list_drawer_ = list_drawer;
 
   name_all_ = "all_point_to_center";
@@ -20,9 +22,18 @@ HoughPlanes::HoughPlanes(GLListDrawerPtr list_drawer)
 void HoughPlanes::setup()
 {
   center_line_ << 0, 0, 0, 5, 5, 5;
-  std::cout << "center_line_: " << center_line_.transpose() << std::endl;
 
-  int points_count = 10;
+  double center_line_length = center_line_.norm();
+  int steps = center_line_length / step_size_;
+  int angle_steps = max_angle_ * 2.0 / angle_bin_size_;
+
+  std::cout << "steps: " << steps << std::endl;
+  std::cout << "angle_steps: " << angle_steps << std::endl;
+  std::cout << "angle_steps: " << max_angle_ * 2.0 / angle_bin_size_ << std::endl;
+
+  votes_ = Eigen::MatrixXd::Zero(angle_steps, steps);
+
+  int points_count = 3000;
 
   Eigen::Vector3f test_point(1, 2, 1);
   data_points_.push_back(test_point);
@@ -64,6 +75,7 @@ void HoughPlanes::run()
   Eigen::Vector2f center_point_xy_normalized = center_point.topRows(2).normalized();
   std::cout << "center_point: " << center_point.transpose() << std::endl;
 
+  int center_point_index = 0;
   while (center_point.norm() < center_line_length)
   {
     // for now quick and dirty
@@ -91,6 +103,8 @@ void HoughPlanes::run()
       if (std::abs(angle) < max_angle_)
       {
         list_drawer_->addLine(center_point, data_points_[i], name_selected_); // blue
+
+        vote(center_point_index, angle);
       }
       else
       {
@@ -99,7 +113,24 @@ void HoughPlanes::run()
     }
 
     center_point += center_vector * step_size_;
+    ++center_point_index;
   }
+}
+
+void HoughPlanes::vote(const int& point_index, const float& angle)
+{
+  float offset_angle = angle + max_angle_;
+
+  int angle_index = std::round(offset_angle / angle_bin_size_);
+
+  votes_(angle_index, point_index) += 1;
+}
+
+Eigen::MatrixXd HoughPlanes::getVotes()
+{
+
+  Eigen::MatrixXd votes_normalized = votes_ / votes_.maxCoeff();
+  return votes_normalized;
 }
 
 } // namespace
