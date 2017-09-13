@@ -12,6 +12,7 @@ QGLVisualizationViewer::QGLVisualizationViewer(QWidget* parent) :
     qglv::QGLViewer(parent)
 {
   hough_image_ = NULL;
+  camera()->setType(qglviewer::Camera::ORTHOGRAPHIC);
 }
 
 void QGLVisualizationViewer::setLineDrawer(GLListDrawerPtr line_drawer)
