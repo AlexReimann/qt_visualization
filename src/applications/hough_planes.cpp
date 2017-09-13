@@ -7,9 +7,9 @@ namespace qt_visualization
 
 HoughPlanes::HoughPlanes(GLListDrawerPtr list_drawer)
 {
-  step_size_ = 0.1;
+  step_size_ = 0.01;
   max_angle_ = 0.174533 * 3;
-  angle_bin_size_ = 0.00872665;
+  angle_bin_size_ = 0.00872665 ;
 
   list_drawer_ = list_drawer;
 
@@ -44,7 +44,9 @@ void HoughPlanes::setup(double px, double py)
 {
   center_line_ << -5, -5, -5, 5, 5, 5;
 
-  double center_line_length = (center_line_.bottomRows(3) - center_line_.topRows(3)).norm();
+  Eigen::Vector3f center_vector = center_line_.bottomRows(3) - center_line_.topRows(3);
+
+  double center_line_length = (center_vector).norm();
   int steps = center_line_length / step_size_;
   int angle_steps = max_angle_ * 2.0 / angle_bin_size_;
 
@@ -68,17 +70,23 @@ void HoughPlanes::setup(double px, double py)
 
   Eigen::Hyperplane<float, 3> plane(plane_normal, plane_point);
 
-  double plane_size = 2.0;
-  Eigen::Vector3f plane_point_1 = plane_normal + Eigen::Vector3f(plane_size, plane_size, 0.0);
-  Eigen::Vector3f plane_point_2 = plane_normal + Eigen::Vector3f(plane_size, -plane_size, 0.0);
-  Eigen::Vector3f plane_point_3 = plane_normal + Eigen::Vector3f(-plane_size, -plane_size, 0.0);
-  Eigen::Vector3f plane_point_4 = plane_normal + Eigen::Vector3f(-plane_size, plane_size, 0.0);
+  double plane_half_size = center_line_length * 0.5;
+  Eigen::Vector3f plane_point_1 = plane_normal + Eigen::Vector3f(plane_half_size, plane_half_size, 0.0);
+  Eigen::Vector3f plane_point_2 = plane_normal + Eigen::Vector3f(plane_half_size, -plane_half_size, 0.0);
+  Eigen::Vector3f plane_point_3 = plane_normal + Eigen::Vector3f(-plane_half_size, -plane_half_size, 0.0);
+  Eigen::Vector3f plane_point_4 = plane_normal + Eigen::Vector3f(-plane_half_size, plane_half_size, 0.0);
 
   list_drawer_->addPolygon(plane.projection(plane_point_1), plane.projection(plane_point_2),
                            plane.projection(plane_point_3), name_plane_);
   list_drawer_->addPolygon(plane.projection(plane_point_4), plane.projection(plane_point_4),
                            plane.projection(plane_point_1), name_plane_);
   list_drawer_->setPolygons(Eigen::Vector3f(0, 1.0, 0), name_plane_);
+
+  float d = (plane_point).dot(plane_normal) / center_vector.dot(plane_normal);
+
+  list_drawer_->addPoint(center_vector * d, "intersection");
+  list_drawer_->setPoints(Eigen::Vector3f(1.0, 0, 0), "intersection");
+  list_drawer_->setPointSize(5.0, "intersection");
 
   int points_count = 10;
   Eigen::Vector3f test_point(1, 2, 1);
@@ -192,7 +200,6 @@ void HoughPlanes::vote(const int& point_index, const float& angle)
 
 Eigen::MatrixXd HoughPlanes::getVotes()
 {
-
   Eigen::MatrixXd votes_normalized = votes_ / votes_.maxCoeff();
   return votes_normalized;
 }

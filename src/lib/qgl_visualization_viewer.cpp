@@ -53,6 +53,8 @@ void QGLVisualizationViewer::draw()
 
   Eigen::MatrixXd votes = hough_planes_->getVotes();
 
+  double max = votes.maxCoeff();
+
   QImage hough_image(votes.cols(), votes.rows(), QImage::Format_RGB32);
 
   for (int y = 0; y < votes.rows(); ++y)
@@ -61,6 +63,11 @@ void QGLVisualizationViewer::draw()
     {
       int value = (votes(y, x) * 255);
       hough_image.setPixel(x, y, qRgb(value, value, value));
+
+      if (votes(y, x) == max)
+      {
+        hough_image.setPixel(x, y, qRgb(255, 0, 0));
+      }
     }
   }
 

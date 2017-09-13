@@ -105,11 +105,18 @@ public:
   protected:
     virtual void update() override
     {
-      glColor3f(color_.x(), color_.y(), color_.z());
+      glColor4f(color_.x(), color_.y(), color_.z(), 0.5f);
       glLineWidth(line_width_);
       glEnableClientState(GL_VERTEX_ARRAY);
       glVertexPointer(3, GL_FLOAT, 0, line_coordinates_.data());
-      glDrawArrays(GL_LINES, 0, line_coordinates_.size() / 3);
+
+      glEnable(GL_BLEND);
+      {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDrawArrays(GL_LINES, 0, line_coordinates_.size() / 3);
+      }
+      glDisable(GL_BLEND);
+
       glDisableClientState(GL_VERTEX_ARRAY);
     }
 
@@ -178,10 +185,17 @@ public:
   protected:
     virtual void update() override
     {
-      glColor3f(color_.x(), color_.y(), color_.z());
+      glColor4f(color_.x(), color_.y(), color_.z(), 0.5f);
       glEnableClientState(GL_VERTEX_ARRAY);
       glVertexPointer(3, GL_FLOAT, 0, point_coordinates_.data());
-      glDrawArrays(GL_POLYGON, 0, point_coordinates_.size() / 3);
+
+      glEnable(GL_BLEND);
+      {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDrawArrays(GL_POLYGON, 0, point_coordinates_.size() / 3);
+      }
+      glDisable(GL_BLEND);
+
       glDisableClientState(GL_VERTEX_ARRAY);
     }
 
