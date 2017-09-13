@@ -78,11 +78,25 @@ void GLListDrawer::addPoint(const float& x, const float& y, const float& z, cons
   points_[id].add(x, y, z);
 }
 
+void GLListDrawer::setPolygons(const Eigen::Vector3f& color, const std::string& id)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  polygons_[id].setColor(color);
+}
+
+void GLListDrawer::addPolygon(const Eigen::Vector3f& point1, const Eigen::Vector3f& point2,
+                              const Eigen::Vector3f& point3, const std::string& id)
+{
+  std::lock_guard<std::mutex> lock(mutex_);
+  polygons_[id].addPoints(point1, point2, point3);
+}
+
 void GLListDrawer::clearAll()
 {
   std::lock_guard<std::mutex> lock(mutex_);
   lines_.clear();
   points_.clear();
+  polygons_.clear();
 }
 
 void GLListDrawer::draw()
@@ -96,6 +110,11 @@ void GLListDrawer::draw()
   for (auto points : points_)
   {
     points.second.draw();
+  }
+
+  for (auto polygons : polygons_)
+  {
+    polygons.second.draw();
   }
 }
 

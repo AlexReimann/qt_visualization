@@ -38,6 +38,7 @@ protected:
   double angle_bin_size_;
 
   std::string name_all_;
+  std::string name_plane_;
   std::string name_selected_;
   std::string name_points_;
   GLListDrawerPtr list_drawer_;

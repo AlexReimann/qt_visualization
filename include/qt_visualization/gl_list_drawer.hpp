@@ -10,6 +10,7 @@
 #include <vector>
 #include <memory>
 #include <mutex>
+#include <iostream>
 
 namespace qt_visualization
 {
@@ -158,6 +159,42 @@ public:
     std::vector<float> point_coordinates_;
   };
 
+  class Polygons : public GLGenList
+  {
+  public:
+    Polygons(const Eigen::Vector3f& color = Eigen::Vector3f(0.0f, 0.0f, 0.0f)) :
+        GLGenList(color)
+    {
+    }
+
+    void addPoints(const Eigen::Vector3f& point1, const Eigen::Vector3f& point2, const Eigen::Vector3f& point3)
+    {
+      addPoint(point1.x(), point1.y(), point1.z());
+      addPoint(point2.x(), point2.y(), point2.z());
+      addPoint(point3.x(), point3.y(), point3.z());
+      updated_ = true;
+    }
+
+  protected:
+    virtual void update() override
+    {
+      glColor3f(color_.x(), color_.y(), color_.z());
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glVertexPointer(3, GL_FLOAT, 0, point_coordinates_.data());
+      glDrawArrays(GL_POLYGON, 0, point_coordinates_.size() / 3);
+      glDisableClientState(GL_VERTEX_ARRAY);
+    }
+
+    void addPoint(const float& x, const float& y, const float& z)
+    {
+      point_coordinates_.push_back(x);
+      point_coordinates_.push_back(y);
+      point_coordinates_.push_back(z);
+    }
+
+    std::vector<float> point_coordinates_;
+  };
+
   GLListDrawer();
   virtual ~GLListDrawer()
   {
@@ -180,6 +217,11 @@ public:
   virtual void addPoint(const Eigen::Vector3f& point, const std::string& id = "");
   virtual void addPoint(const float& x, const float& y, const float& z, const std::string& id = "");
 
+  virtual void setPolygons(const Eigen::Vector3f& color = Eigen::Vector3f(0.0f, 0.0f, 0.0f),
+                           const std::string& id = "");
+  virtual void addPolygon(const Eigen::Vector3f& point1, const Eigen::Vector3f& point2, const Eigen::Vector3f& point3,
+                          const std::string& id = "");
+
   virtual void clearAll();
 
   virtual void draw();
@@ -191,6 +233,7 @@ protected:
   std::mutex mutex_;
   std::map<std::string, Lines> lines_;
   std::map<std::string, Points> points_;
+  std::map<std::string, Polygons> polygons_;
 };
 typedef std::shared_ptr<GLListDrawer> GLListDrawerPtr;
 

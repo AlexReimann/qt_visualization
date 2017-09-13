@@ -14,6 +14,7 @@ HoughPlanes::HoughPlanes(GLListDrawerPtr list_drawer)
   list_drawer_ = list_drawer;
 
   name_all_ = "all_point_to_center";
+  name_plane_ = "plane";
   name_selected_ = "selected_point_to_center";
   name_points_ = "points";
 
@@ -55,6 +56,7 @@ void HoughPlanes::setup(double px, double py)
 
   votes_ = Eigen::MatrixXd::Zero(angle_steps, steps);
   list_drawer_->clearAll();
+  data_points_.clear();
 
   Eigen::Vector3f plane_point(1, 2, 1);
 
@@ -66,7 +68,18 @@ void HoughPlanes::setup(double px, double py)
 
   Eigen::Hyperplane<float, 3> plane(plane_normal, plane_point);
 
-  data_points_.clear();
+  double plane_size = 2.0;
+  Eigen::Vector3f plane_point_1 = plane_normal + Eigen::Vector3f(plane_size, plane_size, 0.0);
+  Eigen::Vector3f plane_point_2 = plane_normal + Eigen::Vector3f(plane_size, -plane_size, 0.0);
+  Eigen::Vector3f plane_point_3 = plane_normal + Eigen::Vector3f(-plane_size, -plane_size, 0.0);
+  Eigen::Vector3f plane_point_4 = plane_normal + Eigen::Vector3f(-plane_size, plane_size, 0.0);
+
+  list_drawer_->addPolygon(plane.projection(plane_point_1), plane.projection(plane_point_2),
+                           plane.projection(plane_point_3), name_plane_);
+  list_drawer_->addPolygon(plane.projection(plane_point_4), plane.projection(plane_point_4),
+                           plane.projection(plane_point_1), name_plane_);
+  list_drawer_->setPolygons(Eigen::Vector3f(0, 1.0, 0), name_plane_);
+
   int points_count = 10;
   Eigen::Vector3f test_point(1, 2, 1);
   data_points_.push_back(test_point);
