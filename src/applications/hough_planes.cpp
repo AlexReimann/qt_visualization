@@ -103,7 +103,7 @@ void HoughPlanes::setup(double px, double py)
     point(1) = point(1) + 2;
     point(2) = point(2) + 2;
 
-    Eigen::Vector3f point_on_plane = plane.projection(point) + Eigen::Vector3f::Random() * 0.2;
+    Eigen::Vector3f point_on_plane = plane.projection(point) + Eigen::Vector3f::Random() * 0.05;
 
     data_points_.push_back(point_on_plane);
     list_drawer_->addPoint(point_on_plane, name_points_);
@@ -244,8 +244,14 @@ void HoughPlanes::test(int x, int y)
   Eigen::Vector3f center_vector = center_line_.bottomRows(3).normalized();
   Eigen::Vector3f point = center_line_.topRows(3) + center_vector * (step_size_ * y);
 
+  double offset_angle = -0.7854 - angle;
+  double error = offset_angle - py_;
+  double abs_error = error;
+
+  std::cout << "best: " << x << "," << y << std::endl;
+  std::cout << "error: " << abs_error << std::endl;
+
 //  std::cout << "best: " << x << "," <<  y << std::endl;
-//  std::cout << "angle: " << angle << std::endl;
 //  std::cout << "diff: " << angle - py_ << std::endl;
 //  std::cout << "actual: " << px_ << ", " << py_ << std::endl;
 //  std::cout << "point: " << point.transpose() << std::endl;
