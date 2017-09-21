@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <math.h>
 
 namespace qt_visualization
 {
@@ -25,6 +26,17 @@ public:
   void run();
   Eigen::MatrixXd getVotes();
 
+  void test(int x, int y);
+
+  static float constrainAngle(float x)
+  {
+    float warp = M_PI;
+    x = std::fmod(x + warp, warp);
+    if (x < 0)
+      x += 2 * warp;
+    return x - warp;
+  }
+
 protected:
   typedef Eigen::Matrix<float, 6, 1> Line;
 
@@ -36,11 +48,13 @@ protected:
   double step_size_;
   double max_angle_;
   double angle_bin_size_;
+  double ninety_degree_threshold_scaler_;
 
   std::string name_all_;
   std::string name_plane_;
   std::string name_selected_;
   std::string name_points_;
+  std::string name_perpendicular_;
   GLListDrawerPtr list_drawer_;
 
   double px_;

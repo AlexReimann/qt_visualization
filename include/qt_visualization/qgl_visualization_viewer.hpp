@@ -29,6 +29,9 @@ public:
   void setHoughImage(QLabel* hough_image_);
   virtual void draw();
 
+  void drawNeighbours(const int& x, const int& y, QImage& image);
+  void enforceBounds(int& x, int& y,  const QImage& image);
+
 public slots:
   void updatePx(const int& slider_value);
   void updatePy(const int& slider_value);
